@@ -1,0 +1,201 @@
+---
+header: Mastering JavaScript Array reduce()
+title: Array Reduce
+date: 2025-06-17
+description: The reduce() method is the most powerful array method in JavaScript. Understanding it will transform how you solve complex problems with elegant, functional code.
+tags: [javascript, array, reduce]
+thumbnail: /images/array-reduce/featured.png
+author: Salma Sali
+---
+
+## What is `reduce()`?
+
+Think of the `reduce()` method as a way to "reduce" an entire array down to one value by accumulating results as you go.
+
+### Basic Syntax
+
+```javascript
+array.reduce(callback, initialValue);
+```
+
+The callback function receives four parameters:
+
+- `accumulator` - The accumulated value from previous iterations
+- `currentValue` - The current element being processed
+- `currentIndex` - The index of the current element (optional)
+- `array` - The original array (optional)
+
+## Understanding the Accumulator
+
+The accumulator is the key to understanding `reduce()`. It carries the result from one iteration to the next:
+
+```javascript
+const numbers = [1, 2, 3];
+const sum = numbers.reduce((acc, num) => {
+  console.log(`Accumulator: ${acc}, Current: ${num}`);
+  return acc + num;
+}, 0);
+
+// Output:
+// Accumulator: 0, Current: 1
+// Accumulator: 1, Current: 2
+// Accumulator: 3, Current: 3
+// Final result: 6
+```
+
+## Working with Objects and Arrays
+
+`reduce()` becomes incredibly powerful when working with complex data structures:
+
+### Counting Occurrences
+
+```javascript
+const fruits = ["apple", "banana", "apple", "orange", "banana", "apple"];
+
+const fruitCount = fruits.reduce((acc, fruit) => {
+  acc[fruit] = (acc[fruit] || 0) + 1;
+  return acc;
+}, {});
+
+console.log(fruitCount);
+// { apple: 3, banana: 2, orange: 1 }
+```
+
+### Grouping Data
+
+```javascript
+const people = [
+  { name: "Alice", age: 25, department: "Engineering" },
+  { name: "Bob", age: 30, department: "Marketing" },
+  { name: "Charlie", age: 35, department: "Engineering" },
+  { name: "Diana", age: 28, department: "Marketing" },
+];
+
+const groupedByDepartment = people.reduce((acc, person) => {
+  const dept = person.department;
+  if (!acc[dept]) {
+    acc[dept] = [];
+  }
+  acc[dept].push(person);
+  return acc;
+}, {});
+
+console.log(groupedByDepartment);
+/*
+{
+  Engineering: [
+    { name: 'Alice', age: 25, department: 'Engineering' },
+    { name: 'Charlie', age: 35, department: 'Engineering' }
+  ],
+  Marketing: [
+    { name: 'Bob', age: 30, department: 'Marketing' },
+    { name: 'Diana', age: 28, department: 'Marketing' }
+  ]
+}
+*/
+```
+
+## Advanced Use Cases
+
+### Building Objects from Arrays
+
+```javascript
+const users = [
+  { id: 1, name: "Alice", email: "alice@email.com" },
+  { id: 2, name: "Bob", email: "bob@email.com" },
+  { id: 3, name: "Charlie", email: "charlie@email.com" },
+];
+
+// Create a lookup object by ID
+const usersById = users.reduce((acc, user) => {
+  acc[user.id] = user;
+  return acc;
+}, {});
+
+console.log(usersById[2]); // { id: 2, name: 'Bob', email: 'bob@email.com' }
+```
+
+### Calculating Complex Statistics
+
+```javascript
+const grades = [85, 92, 78, 96, 87, 91];
+
+const stats = grades.reduce(
+  (acc, grade) => {
+    acc.sum += grade;
+    acc.count += 1;
+    acc.min = Math.min(acc.min, grade);
+    acc.max = Math.max(acc.max, grade);
+    return acc;
+  },
+  { sum: 0, count: 0, min: Infinity, max: -Infinity }
+);
+
+stats.average = stats.sum / stats.count;
+
+console.log(stats);
+// { sum: 529, count: 6, min: 78, max: 96, average: 88.17 }
+```
+
+## Common Patterns and Best Practices
+
+### Using Destructuring
+
+```javascript
+const people = [
+  { name: "Alice", age: 25, salary: 50000 },
+  { name: "Bob", age: 30, salary: 60000 },
+  { name: "Charlie", age: 35, salary: 70000 },
+];
+
+const totalSalary = people.reduce((acc, { salary }) => acc + salary, 0);
+console.log(totalSalary); // 180000
+```
+
+### Functional Composition
+
+```javascript
+const transactions = [
+  { type: "deposit", amount: 100 },
+  { type: "withdrawal", amount: 50 },
+  { type: "deposit", amount: 200 },
+  { type: "withdrawal", amount: 75 },
+];
+
+const balance = transactions.reduce((acc, transaction) => {
+  return transaction.type === "deposit"
+    ? acc + transaction.amount
+    : acc - transaction.amount;
+}, 0);
+
+console.log(balance); // 175
+```
+
+## When NOT to Use `reduce()`
+
+While `reduce()` is powerful, it's not always the right choice:
+
+```javascript
+// ❌ Don't use reduce for simple transformations
+const doubled = numbers.reduce((acc, num) => [...acc, num * 2], []);
+
+// ✅ Use map instead
+const doubled = numbers.map((num) => num * 2);
+
+// ❌ Don't use reduce for filtering
+const evens = numbers.reduce((acc, num) => {
+  if (num % 2 === 0) acc.push(num);
+  return acc;
+}, []);
+
+// ✅ Use filter instead
+const evens = numbers.filter((num) => num % 2 === 0);
+```
+
+## Key Takeaways
+
+1. **Initial Value Matters**: Always provide an initial value to avoid errors with empty arrays and ensure predictable behavior.
+
+2. **Return the Accumulator**: Always return the accumulator from your reducer function, even if you're mutating it.
+
+3. **Choose the Right Tool**: Use `reduce()` when you need to transform an array into a single value or different data structure. Use `map()` and `filter()` for simpler transformations.

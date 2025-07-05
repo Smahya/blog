@@ -1,0 +1,42 @@
+{
+  "name": "note-taker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "contentlayer": "contentlayer build"
+  },
+  "dependencies": {
+    "@uidotdev/usehooks": "^2.4.1",
+    "cheerio": "^1.0.0",
+    "clsx": "^2.1.1",
+    "contentlayer": "^0.3.4",
+    "dayjs": "^1.11.13",
+    "framer-motion": "^12.4.2",
+    "highlight.js": "^11.11.1",
+    "js-cookie": "^3.0.5",
+    "next": "15.1.6",
+    "next-contentlayer": "^0.3.4",
+    "next-themes": "^0.4.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.20.1",
+    "eslint-config-next": "15.1.6",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

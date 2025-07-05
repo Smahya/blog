@@ -1,0 +1,162 @@
+---
+header: Understanding defineExpose In Vuejs
+title: The defineExpose Function
+date: 2025-06-29
+description: The defineExpose({}) in VueJs is a function that allows us to expose properties and methods in a child component to the parent.
+tags: [vue]
+thumbnail:
+author: Salma Sali
+---
+
+## What is `defineExpose()`?
+
+Think of it as props but the other way around, where in this case it's from the child to the parent. The `defineExpose` function in Vue 3's Composition API allows child components to expose specific properties and methods to their parent components.
+
+## Why Use `defineExpose`?
+
+In Vue 3's Composition API, components are closed by default - parent components cannot access child component's internal state or methods. `defineExpose` provides a controlled way to expose specific functionality when needed.
+
+## Basic Usage
+
+Here's a simple example of how to use `defineExpose`:
+
+```javascript
+<!-- Child Component (Counter.vue) -->
+<template>
+  <div>
+    <p>Count: {{ count }}</p>
+    <button @click="increment">Increment</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+const count = ref(0);
+
+const increment = () => {
+  count.value++;
+};
+
+const reset = () => {
+  count.value = 0;
+};
+
+// Expose these to parent components
+defineExpose({
+  count,
+  increment,
+  reset,
+});
+</script>
+```
+
+```javascript
+<!-- Parent Component -->
+<template>
+  <div>
+    <Counter ref="counterRef" />
+    <button @click="resetCounter">Reset Counter</button>
+    <button @click="logCount">Log Count</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import Counter from "./Counter.vue";
+
+const counterRef = useTemplateRef('counterRef')
+
+const resetCounter = () => {
+  counterRef.value?.reset();
+};
+
+const logCount = () => {
+  console.log("Current count:", counterRef.value?.count);
+};
+</script>
+```
+
+## Common Use Cases
+
+### 1. Form Validation
+
+```javascript
+<!-- FormInput.vue -->
+<template>
+  <div>
+    <input v-model="value" :class="{ error: hasError }" />
+    <span v-if="hasError" class="error-message">{{ errorMessage }}</span>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from "vue";
+
+const props = defineProps(["required", "minLength"]);
+const value = ref("");
+const errorMessage = ref("");
+
+const hasError = computed(() => !!errorMessage.value);
+
+const validate = () => {
+  if (props.required && !value.value) {
+    errorMessage.value = "This field is required";
+    return false;
+  }
+  if (props.minLength && value.value.length < props.minLength) {
+    errorMessage.value = `Minimum length is ${props.minLength}`;
+    return false;
+  }
+  errorMessage.value = "";
+  return true;
+};
+
+const clearError = () => {
+  errorMessage.value = "";
+};
+
+defineExpose({
+  validate,
+  clearError,
+  value,
+  hasError,
+});
+</script>
+```
+
+## Best Practices
+
+### 1. Be Selective
+
+Only expose what's necessary. Don't expose internal implementation details that parent components shouldn't manipulate directly.
+
+```javascript
+<!-- Good -->
+defineExpose({ validate, reset, getValue })
+
+<!-- Avoid -->
+defineExpose({ internalState, privateMethod, temporaryVariable })
+```
+
+### 2. Use Clear Names
+
+Make exposed methods and properties self-explanatory:
+
+```javascript
+defineExpose({ // Clear and descriptive submitForm, clearValidation, isValid, //
+Avoid unclear names // doIt, // state, // handle })
+```
+
+### 3. Consider Alternatives
+
+Before using `defineExpose`, consider if there are better patterns:
+
+- **Events**: For notifications and data flow up eg. $emit('event', payload)
+- **Props**: For data flow down
+- **Provide/Inject**: For deeply nested components
+- **Composables**: For shared logic
+
+## Conclusion
+
+Remember: with great power comes great responsibility. Use `defineExpose` sparingly and always consider if there's a more Vue-like way to achieve your goal through props, events, or other patterns first.

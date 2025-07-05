@@ -17,7 +17,7 @@ body {
 }
 
 .centralize-content {
-  @apply w-[680px] mx-auto max-w-[94vw];
+  @apply w-[680px] mx-auto max-w-[90vw];
 }
 
 .app-background {

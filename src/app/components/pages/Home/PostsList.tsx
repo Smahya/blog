@@ -35,8 +35,8 @@ const BlogsCard = ({
   gotToPost: (id: string) => void;
 }) => {
   return (
-    <div className="grid grid-cols-[1fr_4fr] app-ui-bg rounded-xl overflow-hidden shadow-sm app-border">
-      <div className="flex items-center text-center justify-center bg-blue-50 dark:bg-blue-primary px-2 min-w-[180px]">
+    <div className="grid sm:grid-cols-[1.8fr_4fr] app-ui-bg rounded-xl overflow-hidden shadow-sm app-border">
+      <div className="flex items-center justify-start sm:justify-center px-6 sm:px-2 text-left sm:text-center  bg-blue-50 dark:bg-blue-primary min-h-40">
         <Text variant="h3">{post.header}</Text>
       </div>
       <div className="grid grid-rows-[max-content_1fr_max-content] p-6">
